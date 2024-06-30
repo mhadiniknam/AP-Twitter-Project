@@ -9,6 +9,8 @@ using namespace std;
 
 vector<class Account> db;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class Account
 {
 private:
@@ -61,6 +63,8 @@ public:
 		return gender;
 	}
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool isValidEmail(string &email)
 {
@@ -125,6 +129,8 @@ void login(string &loggedInUser)
 		cout << "\nLogin failed. Invalid username/email or password. Please try again.\n";
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void addDone(string &s, int refresh)
 {
@@ -262,17 +268,19 @@ void twitter()
 int main()
 {
 	int exitcode = 1;
-	field[1] = "Name";
-	field[2] = "FamilyName";
-	field[3] = "Username ";
-	field[4] = "Password";
+	// field[1] = "Name";
+	// field[2] = "FamilyName";
+	// field[3] = "Username ";
+	// field[4] = "Password";
+	string loggedInUser;
 
 	while (exitcode)
 	{
 		CubbyMenu::Menu menu;
 		menu.add_header("---------AP-Twitter-Project---------");
 
-		menu.add_item("Login", &twitter);
+		menu.add_item("Login", [&loggedInUser]()
+					  { login(loggedInUser); });
 		menu.add_item("SignUp", &SignUp);
 		menu.add_item("Exit", [&exitcode]()
 					  { exitcode = 0; });
