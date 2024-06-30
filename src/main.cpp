@@ -140,14 +140,14 @@ void addDone(string &s, int refresh)
 	}
 }
 
-void SendTodb(string name, string familyname, string username, string password)
+void sendTodb(string name, string familyName, string username, string password)
 {
 
 	cout << "Your SignUp has been complited" << endl;
-	db.push_back(Account(name, familyname, username, password));
+	db.push_back(Account(name, familyName, username, password));
 }
 
-void signin_fields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
+void signInFields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
 {
 	// A Boosted Cin
 	int flager = 1;
@@ -199,7 +199,7 @@ int flag[5] = {0};
 // The twitter fields
 string field[4];
 
-void SignUp()
+void signUp()
 {
 
 	while (!flag[1] || !flag[2] || !flag[3] || !flag[4])
@@ -207,45 +207,52 @@ void SignUp()
 		CubbyMenu::Menu sign;
 		sign.add_header("----------SignUp Menu----------");
 		sign.add_item(field[1], [&]()
-					  { signin_fields(1, field, flag, comp); });
+					  { signInFields(1, field, flag, comp); });
 		sign.add_item(field[2], [&]()
-					  { signin_fields(2, field, flag, comp); });
+					  { signInFields(2, field, flag, comp); });
 		sign.add_item(field[3], [&]()
-					  { signin_fields(3, field, flag, comp); });
+					  { signInFields(3, field, flag, comp); });
 		sign.add_item(field[4], [&]()
-					  { signin_fields(4, field, flag, comp); });
+					  { signInFields(4, field, flag, comp); });
 		sign.print();
 	}
 
-	SendTodb(comp[1], comp[2], comp[3], comp[4]);
+	sendTodb(comp[1], comp[2], comp[3], comp[4]);
 }
-void TwitPage()
+
+void twitPage()
 {
 }
-void Setting(int &logincode)
+
+void setting(int &loginCode)
 {
 	int i = 1;
 	while (i)
 	{
 		CubbyMenu::Menu page;
-		page.add_item("Click for Logout", [&i, &logincode]()
-					  { i = 0, logincode = 0; });
+		page.add_item("Click for Logout", [&i, &loginCode]()
+					  { i = 0, loginCode = 0; });
 		page.add_item("Return Back To menu", [&i]
 					  { i = 0; });
 		page.print();
 	}
 }
-void Post()
-{
-}
-void Profile()
-{
-}
-void twitter()
-{
-	int logincode = 1;
 
-	while (logincode)
+void post()
+{
+}
+
+void profile()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void twitterLogo()
+{
+	int loginCode = 1;
+
+	while (loginCode)
 	{
 		CubbyMenu::Menu page;
 		cout << "-------------------------------------" << endl;
@@ -254,16 +261,18 @@ void twitter()
 		cout << "   | \\ \\  \\ /  | |   |    __/ |   " << endl;
 		cout << "  _|  \\_/\\_/  _|\\__|\\__|\\___|_|  " << endl;
 		cout << "-------------------------------------" << endl;
-		page.add_item("The twitte page", &TwitPage);
-		page.add_item("Settings", [&logincode]()
-					  { Setting(logincode); });
+		page.add_item("The twitte page", &twitPage);
+		page.add_item("Settings", [&loginCode]()
+					  { setting(loginCode); });
 
-		page.add_item("Post", &Post);
-		page.add_item("Profile", &Profile);
+		page.add_item("Post", &post);
+		page.add_item("Profile", &profile);
 
 		page.print();
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main()
 {
@@ -281,7 +290,7 @@ int main()
 
 		menu.add_item("Login", [&loggedInUser]()
 					  { login(loggedInUser); });
-		menu.add_item("SignUp", &SignUp);
+		menu.add_item("SignUp", &signUp);
 		menu.add_item("Exit", [&exitcode]()
 					  { exitcode = 0; });
 
