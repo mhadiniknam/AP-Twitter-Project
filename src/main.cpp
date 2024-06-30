@@ -3,9 +3,11 @@
 #include <iostream>
 #include <vector> 
 
+// Done Mechanism is not work properly 
+
 using namespace std ; 
 
-vector <class Account> db ; 
+vector <class Account> db ;
 
 class Account{
 	private : 
@@ -20,85 +22,85 @@ class Account{
 			this->username = username ; 
 			this->password = password ;
 		}	
-
 };
 
 void login()
 {
 	/*--- Yours ---*/
 }
-void addDone(string &s){
+void addDone(string &s,int refresh){
+	if(refresh){
 	s = s + "(Done)"; 
+	}
 }
-void SignUpEnter(string name , string familyname , string username , string password ){
+void SendTodb(string name , string familyname , string username , string password ){
 
+	cout << "Your SignUp has been complited" << endl ; 
+	db.push_back(Account(name,familyname, username, password) ) ; 
 }
+void signin_fields(int i, string(&field)[4], int(&flag)[5], string(&comp)[5]) {
+	// A Boosted Cin 
+	
+	int flager = 1 ; 
+	int refresh = 1 ; 
+	if(flag[i] == 1 ) { 
+		
+			CubbyMenu::Menu Y;
+		Y.add_header("You had done this field do you want to edit it ?");
+		Y.add_item("Yes",[&refresh](){refresh = 0;});
+		Y.add_item("No",[&flager](){flager = 0 ;});
+		Y.print() ;	
+	}
+	if(flager) {
+		cout << "Enter Your " << field[i] << endl;
+		cin >> comp[i];
+		cout << "Done" << endl;
+		addDone(field[i],refresh);
+		flag[i] = 1;
+	}
+}
+// Attention : If you change the size of any array you must change the function input of signin_field as well 
+// component 
+string comp[5] ;
+
+// check whether a field just complete or not...
+int flag[5] = {0} ; 
+
+//The twitter fields
+string field[4]  ;
 
 void SignUp(){
-	/*
-	CubbyMenu::Menu sign;
-	sign.add_header("----------SignUp Menu----------");
 
-	string name ; 
-	string familyname ;
-	string username ; 
-	string password ;
-	int flags[5] = {0} ; 
 
-	string field[4]  ;
-	field[1] = "1. Name" ;
-	field[2] = "2. FamilyName";
-	field[3] ="3. username " ;
-	field[4] ="4. Password";
-
-	sign.add_item(field[1],( 
-			cout << "Enter Your name" << endl  ;
-			cin >> name ;
-			cout << "Done" << endl ;	
-			addDone(field[4]);
-			flag[4]++ ; )	);
-
-	sign.add_item(field[2],{
-			cout << "Enter Your FamilyName" ;
-			cin >> familyname ;
-			cout << "Done" << endl ;
-			addDone(field[2]);
-			flag[2]++ ; 
-			}	);
-
-	sign.add_item(field[3],{
-			cout << "Enter Your Username" ;
-			cin >> familyname ;
-			cout << "Done" << endl ;	
-			addDone(field[3]);
-			flag[3]++ ;
-		    	}
-		     );
-
-	sign.add_item(field[4],{
-			cout << "Enter Your Password" ;
-			cin >> familyname ;
-			cout << "Done" << endl ;
-			addDone(field[4]);
-			flag[4]++ ; 
-			}    );
-	if(flag[1] && flag[2] && flag[3] && flag[4] ) {
-		sign.add_item("SEND" , &SignUpEnter(string name , string familyname , string username , string password ));
+	while(!flag[1] || !flag[2] || !flag[3] || !flag[4]){ 
+		CubbyMenu::Menu sign;
+		sign.add_header("----------SignUp Menu----------");
+		sign.add_item(field[1], [&]() {signin_fields(1,field,flag,comp) ; });
+		sign.add_item(field[2], [&]() { signin_fields(2,field,flag,comp) ; } );
+		sign.add_item(field[3], [&]() { signin_fields(3,field,flag,comp); } );
+		sign.add_item(field[4], [&]() {signin_fields(4,field,flag,comp) ; });
+		sign.print() ; 
 	}
-	*/
-}
-void Exit(){
-	cout << "Have a great time!" << endl ; 
-	exit(0) ;
+
+	SendTodb(comp[1] , comp[2] ,comp[3] ,comp[4]) ; 
 }
 int main()
 {
-	CubbyMenu::Menu menu;
-	menu.add_header("---------AP-Twitter-Project---------");
+	int exitcode = 1 ; 
+	field[1] = "Name" ;
+	field[2] = "FamilyName";
+	field[3] = "Username " ;
+	field[4] = "Password";
 
-	menu.add_item("Login", &login );
-	menu.add_item("SignUp",&SignUp);
-	menu.add_item("Exit", &Exit   );
+	while(exitcode){
+		CubbyMenu::Menu menu;
+		menu.add_header("---------AP-Twitter-Project---------");
 
-	menu.print();
+		menu.add_item("Login", &login );
+		menu.add_item("SignUp",&SignUp);
+		menu.add_item("Exit", [&exitcode](){ exitcode = 0 ;} );
+
+
+		menu.print();
+	}
 }
