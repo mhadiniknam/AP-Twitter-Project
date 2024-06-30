@@ -253,8 +253,20 @@ void setting(int &loginCode)
 	}
 }
 
-void post()
+void post(string &loggedInUser)
 {
+	if (loggedInUser.empty())
+	{
+		cout << "You're not logged in! Please log in first." << endl;
+		return;
+	}
+
+	string content;
+	cout << "Enter tweet content: ";
+	cin.ignore();
+	getline(cin, content);
+	tweets.push_back(Tweet(loggedInUser, content));
+	cout << "Your tweet posted successfully!" << endl;
 }
 
 void profile()
@@ -266,6 +278,7 @@ void profile()
 void twitterLogo()
 {
 	int loginCode = 1;
+	string loggedInUser;
 
 	while (loginCode)
 	{
@@ -276,11 +289,15 @@ void twitterLogo()
 		cout << "   | \\ \\  \\ /  | |   |    __/ |   " << endl;
 		cout << "  _|  \\_/\\_/  _|\\__|\\__|\\___|_|  " << endl;
 		cout << "-------------------------------------" << endl;
+
 		page.add_item("The twitte page", &twitPage);
+
 		page.add_item("Settings", [&loginCode]()
 					  { setting(loginCode); });
 
-		page.add_item("Post", &post);
+		page.add_item("Post", [&loggedInUser]()
+					  { post(loggedInUser); });
+
 		page.add_item("Profile", &profile);
 
 		page.print();
@@ -305,9 +322,14 @@ int main()
 
 		menu.add_item("Login", [&loggedInUser]()
 					  { login(loggedInUser); });
+
 		menu.add_item("SignUp", &signUp);
+
 		menu.add_item("Exit", [&exitcode]()
 					  { exitcode = 0; });
+
+		menu.add_item("Post", [&loggedInUser]()
+					  { post(loggedInUser); });
 
 		menu.print();
 	}
