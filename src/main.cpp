@@ -8,6 +8,7 @@ using namespace std;
 // Done Mechanism is not work properly
 
 vector<class Account> db;
+vector<class Tweet> tweets;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +62,20 @@ public:
 	string getGender()
 	{
 		return gender;
+	}
+};
+
+class Tweet
+{
+private:
+	string username;
+	string content;
+
+public:
+	Tweet(string username, string content)
+	{
+		this->username = username;
+		this->content = content;
 	}
 };
 
