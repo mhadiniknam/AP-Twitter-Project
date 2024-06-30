@@ -66,55 +66,81 @@ void signin_fields(int i, string(&field)[4], int(&flag)[5], string(&comp)[5]) {
 				}
 			}
 		}
-			if(flag2) {
-				cout << "Done" << endl;
-				addDone(field[i],refresh);
-				flag[i] = 1;
-			}
+		if(flag2) {
+			cout << "Done" << endl;
+			addDone(field[i],refresh);
+			flag[i] = 1;
 		}
 	}
-	// Attention : If you change the size of any array you must change the function input of signin_field as well 
-	// component 
-	string comp[5] ;
+}
+// Attention : If you change the size of any array you must change the function input of signin_field as well 
+// component 
+string comp[5] ;
 
-	// check whether a field just complete or not...
-	int flag[5] = {0} ; 
+// check whether a field just complete or not...
+int flag[5] = {0} ; 
 
-	//The twitter fields
-	string field[4]  ;
+//The twitter fields
+string field[4]  ;
 
-	void SignUp(){
+void SignUp(){
 
 
-		while(!flag[1] || !flag[2] || !flag[3] || !flag[4]){ 
-			CubbyMenu::Menu sign;
-			sign.add_header("----------SignUp Menu----------");
-			sign.add_item(field[1], [&]() {signin_fields(1,field,flag,comp) ; });
-			sign.add_item(field[2], [&]() { signin_fields(2,field,flag,comp) ; } );
-			sign.add_item(field[3], [&]() { signin_fields(3,field,flag,comp); } );
-			sign.add_item(field[4], [&]() {signin_fields(4,field,flag,comp) ; });
-			sign.print() ; 
-		}
-
-		SendTodb(comp[1] , comp[2] ,comp[3] ,comp[4]) ; 
+	while(!flag[1] || !flag[2] || !flag[3] || !flag[4]){ 
+		CubbyMenu::Menu sign;
+		sign.add_header("----------SignUp Menu----------");
+		sign.add_item(field[1], [&]() {signin_fields(1,field,flag,comp) ; });
+		sign.add_item(field[2], [&]() { signin_fields(2,field,flag,comp) ; } );
+		sign.add_item(field[3], [&]() { signin_fields(3,field,flag,comp); } );
+		sign.add_item(field[4], [&]() {signin_fields(4,field,flag,comp) ; });
+		sign.print() ; 
 	}
-	int main()
-	{
-		int exitcode = 1 ; 
-		field[1] = "Name" ;
-		field[2] = "FamilyName";
-		field[3] = "Username " ;
-		field[4] = "Password";
 
-		while(exitcode){
-			CubbyMenu::Menu menu;
-			menu.add_header("---------AP-Twitter-Project---------");
+	SendTodb(comp[1] , comp[2] ,comp[3] ,comp[4]) ; 
+}
+void TwitPage(){
 
-			menu.add_item("Login", &login );
-			menu.add_item("SignUp",&SignUp);
-			menu.add_item("Exit", [&exitcode](){ exitcode = 0 ;} );
+}
+void twitter(){
+	int logincode =  1;
+
+	while(logincode){
+		CubbyMenu::Menu page;
+		cout << "-------------------------------------" << endl ;
+		cout << "__ __|        _) |   |             " << endl ; 
+		cout << "   |\\ \\  \\   / | __| __|  _ \\  __| " << endl;
+		cout << "   | \\ \\  \\ /  | |   |    __/ |   " << endl ; 
+	        cout << "  _|  \\_/\\_/  _|\\__|\\__|\\___|_|  " << endl ;
+		cout << "-------------------------------------" << endl ; 	
+		page.add_item("The twitte page", &TwitPage );
+		page.add_item("Settings",&SignUp);
+		page.add_item("Exit", [&logincode](){ logincode = 0 ;} );
 
 
-			menu.print();
-		}
+		page.print();
+
 	}
+
+}
+
+int main()
+{
+	int exitcode = 1 ; 
+	field[1] = "Name" ;
+	field[2] = "FamilyName";
+	field[3] = "Username " ;
+	field[4] = "Password";
+
+	while(exitcode){
+		CubbyMenu::Menu menu;
+		menu.add_header("---------AP-Twitter-Project---------");
+
+		menu.add_item("Login", &twitter );
+		menu.add_item("SignUp",&SignUp);
+		menu.add_item("Exit", [&exitcode](){ exitcode = 0 ;} );
+
+
+		menu.print();
+	}
+}
+
