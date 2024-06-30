@@ -1,4 +1,4 @@
-#include "D:\AUT doc\Project\AP-Twitter-Project\include\CubbyMenu.hpp"
+#include "CubbyMenu/CubbyMenu.hpp"
 
 #include <iostream>
 #include <vector> 
@@ -101,6 +101,21 @@ void SignUp(){
 void TwitPage(){
 
 }
+void Setting(int &logincode){
+int i = 1; 
+	while(i){
+CubbyMenu::Menu page;
+			page.add_item("Click for Logout",[&i,&logincode](){ i = 0 , logincode = 0 ; } );
+			page.add_item("Return Back To menu",[&i]{ i= 0 ;});
+			page.print();
+}
+}
+void Post(){
+
+}
+void Profile(){
+
+}
 void twitter(){
 	int logincode =  1;
 
@@ -113,14 +128,13 @@ void twitter(){
 	        cout << "  _|  \\_/\\_/  _|\\__|\\__|\\___|_|  " << endl ;
 		cout << "-------------------------------------" << endl ; 	
 		page.add_item("The twitte page", &TwitPage );
-		page.add_item("Settings",&SignUp);
-		page.add_item("Exit", [&logincode](){ logincode = 0 ;} );
+		page.add_item("Settings", [&logincode](){ Setting(logincode);} );
 
+		page.add_item("Post",&Post);
+		page.add_item("Profile",&Profile);
 
 		page.print();
-
 	}
-
 }
 
 int main()
@@ -143,4 +157,3 @@ int main()
 		menu.print();
 	}
 }
-
