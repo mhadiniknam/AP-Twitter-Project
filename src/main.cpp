@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-// Done Mechanism is not work properly
-
 using namespace std;
+
+// Done Mechanism is not work properly
 
 vector<class Account> db;
 
@@ -13,28 +13,119 @@ class Account
 {
 private:
 	string name;
-	string familyname;
+	string familyName;
 	string username;
+	string email;
 	string password;
+	string dateOfBirth;
+	string gender;
 
 public:
-	Account(string name, string familyname, string username, string password)
+	Account(string name, string familyName, string username, string email, string password, string dateOfBirth = "", string gender = "")
 	{
 		this->name = name;
-		this->familyname = familyname;
+		this->familyName = familyName;
 		this->username = username;
+		this->email = email;
 		this->password = password;
+		this->dateOfBirth = dateOfBirth;
+		this->gender = gender;
 	}
-	string UsernameGetter()
+
+	string getUsername()
 	{
 		return username;
 	}
+	string getEmail()
+	{
+		return email;
+	}
+	string getPassword()
+	{
+		return password;
+	}
+	string getName()
+	{
+		return name;
+	}
+	string getFamilyName()
+	{
+		return familyName;
+	}
+	string getDateOfBirth()
+	{
+		return dateOfBirth;
+	}
+	string getGender()
+	{
+		return gender;
+	}
 };
 
-void login()
+bool isValidEmail(string &email)
 {
-	/*--- Yours ---*/
+	bool hasAt = false, hasDot = false;
+	for (char c : email)
+	{
+		if (c == '@')
+			hasAt = true;
+		if (hasAt && c == '.')
+			hasDot = true;
+	}
+
+	return (hasAt && hasDot);
 }
+
+bool isValidPassword(string &password)
+{
+	if (password.length() < 8)
+		return false;
+
+	bool hasLower = false, hasUpper = false, hasDigit = false, hasSpecial = false;
+	for (char c : password)
+	{
+		if (islower(c))
+			hasLower = true;
+		else if (isupper(c))
+			hasUpper = true;
+		else if (isdigit(c))
+			hasDigit = true;
+		else
+			hasSpecial = true;
+	}
+
+	return (hasLower && hasUpper && hasDigit && hasSpecial);
+}
+
+void login(string &loggedInUser)
+{
+	string userInput;
+	string password;
+
+	cout << "Enter your username or email: ";
+	cin >> userInput;
+
+	cout << "Enter your password: ";
+	cin >> password;
+
+	bool found = false;
+	for (auto &account : db)
+	{
+		if ((account.getUsername() == userInput || account.getEmail() == userInput) && (account.getPassword() == password))
+		{
+			loggedInUser = account.getUsername(); // Set the loggedInUser to the found username
+			cout << "\nWelcome back, " << account.getName() << "!\n";
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		cout << "\nLogin failed. Invalid username/email or password. Please try again.\n";
+	}
+}
+
 void addDone(string &s, int refresh)
 {
 	if (refresh)
@@ -42,12 +133,14 @@ void addDone(string &s, int refresh)
 		s = s + "(Done)";
 	}
 }
+
 void SendTodb(string name, string familyname, string username, string password)
 {
 
 	cout << "Your SignUp has been complited" << endl;
 	db.push_back(Account(name, familyname, username, password));
 }
+
 void signin_fields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
 {
 	// A Boosted Cin
@@ -74,7 +167,7 @@ void signin_fields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
 			// I want to check the existance of the username
 			for (Account x : db)
 			{
-				if (comp[i].compare(x.UsernameGetter()))
+				if (comp[i].compare(x.getUsername()))
 				{
 					flag2 = 0;
 					break;
@@ -89,6 +182,7 @@ void signin_fields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
 		}
 	}
 }
+
 // Attention : If you change the size of any array you must change the function input of signin_field as well
 // component
 string comp[5];
