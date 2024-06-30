@@ -289,8 +289,28 @@ void twitPage()
 	}
 }
 
-void profile()
+void profile(string &loggedInUser)
 {
+	if (loggedInUser.empty())
+	{
+		cout << "You're not logged in! Please log in first." << endl;
+		return;
+	}
+
+	for (auto &account : db)
+	{
+		if (account.getUsername() == loggedInUser)
+		{
+			cout << "Name: " << account.getName() << endl;
+			cout << "Family Name: " << account.getFamilyName() << endl;
+			cout << "Email: " << account.getEmail() << endl;
+			cout << "Date of Birth: " << account.getDateOfBirth() << endl;
+			cout << "Gender: " << account.getGender() << endl;
+			return;
+		}
+	}
+
+	cout << "Error: User profile not found!" << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -318,7 +338,8 @@ void twitterLogo()
 		page.add_item("Post", [&loggedInUser]()
 					  { post(loggedInUser); });
 
-		page.add_item("Profile", &profile);
+		page.add_item("Profile", [&loggedInUser]()
+					  { profile(loggedInUser); });
 
 		page.print();
 	}
@@ -352,6 +373,9 @@ int main()
 					  { post(loggedInUser); });
 
 		menu.add_item("View Tweets", &twitPage);
+
+		menu.add_item("Profile", [&loggedInUser]()
+					  { profile(loggedInUser); });
 
 		menu.print();
 	}
