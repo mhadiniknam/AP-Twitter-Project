@@ -77,6 +77,16 @@ public:
 		this->username = username;
 		this->content = content;
 	}
+
+	string getTweetUsername()
+	{
+		return username;
+	}
+
+	string getTweetContent()
+	{
+		return content;
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,10 +245,6 @@ void signUp()
 	sendTodb(comp[1], comp[2], comp[3], comp[4]);
 }
 
-void twitPage()
-{
-}
-
 void setting(int &loginCode)
 {
 	int i = 1;
@@ -267,6 +273,20 @@ void post(string &loggedInUser)
 	getline(cin, content);
 	tweets.push_back(Tweet(loggedInUser, content));
 	cout << "Your tweet posted successfully!" << endl;
+}
+
+void twitPage()
+{
+	if (tweets.empty())
+	{
+		cout << "No tweets available now!" << endl;
+		return;
+	}
+
+	for (auto &tweet : tweets)
+	{
+		cout << tweet.getTweetUsername() << ": " << tweet.getTweetContent() << endl;
+	}
 }
 
 void profile()
@@ -330,6 +350,8 @@ int main()
 
 		menu.add_item("Post", [&loggedInUser]()
 					  { post(loggedInUser); });
+
+		menu.add_item("View Tweets", &twitPage);
 
 		menu.print();
 	}
