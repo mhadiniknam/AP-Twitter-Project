@@ -24,15 +24,15 @@ private:
 	string gender;
 
 public:
-	Account(string name, string familyName, string username, string email, string password, string dateOfBirth = "", string gender = "")
+	vector<string>follower ;
+	vector<string>following ;
+	Account(string name, string familyName, string username, string password, string email)
 	{
 		this->name = name;
 		this->familyName = familyName;
 		this->username = username;
 		this->email = email;
 		this->password = password;
-		this->dateOfBirth = dateOfBirth;
-		this->gender = gender;
 	}
 
 	string getUsername()
@@ -63,6 +63,16 @@ public:
 	{
 		return gender;
 	}
+	void fieldSetter(int i, string s){
+		switch(i) {
+		case 6:
+			this->gender = s ; 
+		break;
+		case 7: 
+			this->dateOfBirth = s ;
+			break ;
+		}
+	}
 };
 
 class Tweet
@@ -70,7 +80,7 @@ class Tweet
 private:
 	string username;
 	string content;
-
+	int likenum = 0 ; 
 public:
 	Tweet(string username, string content)
 	{
@@ -86,6 +96,9 @@ public:
 	string getTweetContent()
 	{
 		return content;
+	}
+	void like(){
+		likenum++; 
 	}
 };
 
@@ -126,7 +139,7 @@ bool isValidPassword(string &password)
 	return (hasLower && hasUpper && hasDigit && hasSpecial);
 }
 
-void login(string &loggedInUser)
+void login(string &loggedInUser,int &flaglogin)
 {
 	string userInput;
 	string password;
@@ -137,19 +150,18 @@ void login(string &loggedInUser)
 	cout << "Enter your password: ";
 	cin >> password;
 
-	bool found = false;
 	for (auto &account : db)
 	{
 		if ((account.getUsername() == userInput || account.getEmail() == userInput) && (account.getPassword() == password))
 		{
 			loggedInUser = account.getUsername(); // Set the loggedInUser to the found username
 			cout << "\nWelcome back, " << account.getName() << "!\n";
-			found = true;
+			flaglogin = 1;
 			break;
 		}
 	}
 
-	if (!found)
+	if (!flaglogin)
 	{
 		cout << "\nLogin failed. Invalid username/email or password. Please try again.\n";
 	}
@@ -164,15 +176,32 @@ void addDone(string &s, int refresh)
 		s = s + "(Done)";
 	}
 }
+// Attention : If you change the size of any array you must change the function input of signin_field as well
+// component
+string comp[9];
 
-void sendTodb(string name, string familyName, string username, string password)
+// check whether a field just complete or not...
+int flag[8] = {0};
+
+// The twitter fields
+string field[8];
+
+
+void sendTodb(string name, string familyName, string username, string password,string email)
 {
 
 	cout << "Your SignUp has been complited" << endl;
-	db.push_back(Account(name, familyName, username, password));
+	auto x = Account(name, familyName, username, password,email);
+	if(flag[6]){
+			x.fieldSetter(6,comp[6]) ; 
+}
+	if(flag[7]){
+		x.fieldSetter(7,comp[7]);
+	}
+	db.push_back(x);
 }
 
-void signInFields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
+void signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 {
 	// A Boosted Cin
 	int flager = 1;
@@ -214,20 +243,10 @@ void signInFields(int i, string (&field)[4], int (&flag)[5], string (&comp)[5])
 	}
 }
 
-// Attention : If you change the size of any array you must change the function input of signin_field as well
-// component
-string comp[5];
-
-// check whether a field just complete or not...
-int flag[5] = {0};
-
-// The twitter fields
-string field[4];
-
 void signUp()
 {
 
-	while (!flag[1] || !flag[2] || !flag[3] || !flag[4])
+	while (!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5])
 	{
 		CubbyMenu::Menu sign;
 		sign.add_header("----------SignUp Menu----------");
@@ -239,12 +258,20 @@ void signUp()
 					  { signInFields(3, field, flag, comp); });
 		sign.add_item(field[4], [&]()
 					  { signInFields(4, field, flag, comp); });
+		sign.add_item(field[5], [&]()
+					  { signInFields(5, field, flag, comp); });
+		sign.add_item(field[6], [&]()
+					  { signInFields(6, field, flag, comp); });
+		sign.add_item(field[7], [&]()
+					  { signInFields(7, field, flag, comp); });
+
 		sign.print();
 	}
 
-	sendTodb(comp[1], comp[2], comp[3], comp[4]);
+	sendTodb(comp[1], comp[2], comp[3], comp[4],comp[5]);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 void setting(int &loginCode)
 {
 	int i = 1;
@@ -274,8 +301,29 @@ void post(string &loggedInUser)
 	tweets.push_back(Tweet(loggedInUser, content));
 	cout << "Your tweet posted successfully!" << endl;
 }
-
-void twitPage()
+void DeleteTweet(Tweet &tweet){
+	int i = 0 ; 
+	for(auto x : tweets){
+		if(!(tweet.getTweetUsername().compare(x.getTweetUsername()))){
+				if(!(tweet.getTweetContent().compare(x.getTweetContent()))){
+					break ; 
+				}
+				}
+				i++ ;
+				}
+				tweets.erase(tweets.begin() + i );
+}
+void TweetMenu(string LoggedInUser,Tweet &tweet){
+	
+	CubbyMenu::Menu page;
+	page.add_header("What you want to do with this tweet ?"); 
+	page.add_item("Like the tweet" ,[&tweet](){tweet.like();});
+	if(!(tweet.getTweetUsername().compare(LoggedInUser))){
+		page.add_item("Delete the tweet" ,[&tweet](){DeleteTweet(tweet);}) ; 
+	}
+	page.print() ; 
+}
+void twitPage(string &loggedInUser)
 {
 	if (tweets.empty())
 	{
@@ -283,10 +331,12 @@ void twitPage()
 		return;
 	}
 
+	CubbyMenu::Menu Twits;
 	for (auto &tweet : tweets)
 	{
-		cout << tweet.getTweetUsername() << ": " << tweet.getTweetContent() << endl;
+		Twits.add_item( tweet.getTweetUsername() + ":"+ tweet.getTweetContent() , [&loggedInUser,&tweet](){TweetMenu(loggedInUser,tweet);});
 	}
+	Twits.print();
 }
 
 void profile(string &loggedInUser)
@@ -319,8 +369,11 @@ void twitterLogo()
 {
 	int loginCode = 1;
 	string loggedInUser;
-
-	while (loginCode)
+	int flaglogin = 0 ; 
+	while(!flaglogin) {
+		login(loggedInUser,flaglogin) ; 
+	}
+	while (loginCode && flaglogin)
 	{
 		CubbyMenu::Menu page;
 		cout << "-------------------------------------" << endl;
@@ -330,7 +383,7 @@ void twitterLogo()
 		cout << "  _|  \\_/\\_/  _|\\__|\\__|\\___|_|  " << endl;
 		cout << "-------------------------------------" << endl;
 
-		page.add_item("The twitte page", &twitPage);
+		page.add_item("The twitte page",[&loggedInUser] (){twitPage(loggedInUser);});
 
 		page.add_item("Settings", [&loginCode]()
 					  { setting(loginCode); });
@@ -350,33 +403,36 @@ void twitterLogo()
 int main()
 {
 	int exitcode = 1;
-	// field[1] = "Name";
-	// field[2] = "FamilyName";
-	// field[3] = "Username ";
-	// field[4] = "Password";
-	string loggedInUser;
+	field[1] = "Name";
+	field[2] = "FamilyName";
+	field[3] = "Username ";
+	field[4] = "Password";
+	field[5] = "Email";
+	field[6] = "Date Of Birth";
+	field[7] = "Gender";
+	
 
 	while (exitcode)
 	{
 		CubbyMenu::Menu menu;
 		menu.add_header("---------AP-Twitter-Project---------");
 
-		menu.add_item("Login", [&loggedInUser]()
-					  { login(loggedInUser); });
+		menu.add_item("Login", &twitterLogo);
 
 		menu.add_item("SignUp", &signUp);
 
 		menu.add_item("Exit", [&exitcode]()
 					  { exitcode = 0; });
 
+/*
 		menu.add_item("Post", [&loggedInUser]()
 					  { post(loggedInUser); });
 
-		menu.add_item("View Tweets", &twitPage);
+		menu.add_item("View Tweets", twitPage);
 
 		menu.add_item("Profile", [&loggedInUser]()
 					  { profile(loggedInUser); });
-
+*/
 		menu.print();
 	}
 }
