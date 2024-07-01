@@ -120,8 +120,9 @@ bool isValidEmail(string &email)
 
 bool isValidPassword(string &password)
 {
-	if (password.length() < 8)
+	if (password.length() < 8){
 		return false;
+}
 
 	bool hasLower = false, hasUpper = false, hasDigit = false, hasSpecial = false;
 	for (char c : password)
@@ -203,7 +204,7 @@ void sendTodb(string name, string familyName, string username, string password,s
 
 void signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 {
-	// A Boosted Cin
+	// -------------------------A Boosted & Compact Cin----------------------
 	int flager = 1;
 	int refresh = 1;
 	if (flag[i] == 1)
@@ -234,13 +235,34 @@ void signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 				}
 			}
 		}
-		if (flag2)
+		bool a = true ;
+		bool b = true ;
+	        //cout << i << comp[i] << endl; 	
+		if ( i == 4 ) {
+			a = isValidPassword(comp[4]) ;	
+		}
+		if ( i == 5) {
+			b = isValidEmail(comp[5]) ;	
+		}
+		if (flag2 && a && b)
 		{
 			cout << "Done" << endl;
 			addDone(field[i], refresh);
 			flag[i] = 1;
+		}else{
+			if(i == 4) {
+			cout << "Your PassWord is Inproprate" << endl ;
+			}
+
+		if(i == 5){
+			cout << "Your PassWord is Inproprate format !" << endl;
+		}
+		if(i == 3){
+			cout << "Your Username is not unique !" << endl ; 
+		}
 		}
 	}
+
 }
 
 void signUp()
