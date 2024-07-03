@@ -112,6 +112,7 @@ public:
 		this->id = id;
 		this->isReply = isReply;
 	}
+
 	Tweet(string username, string content, int id, int isReply, int toReplyId)
 	{
 		this->username = username;
@@ -120,6 +121,7 @@ public:
 		this->isReply = isReply;
 		this->toReplyId = toReplyId;
 	}
+
 	string getTweetUsername()
 	{
 		return username;
@@ -129,14 +131,17 @@ public:
 	{
 		return content;
 	}
+
 	void like()
 	{
 		likenum++;
 	}
+
 	int getisReply()
 	{
 		return isReply;
 	}
+
 	int getlike()
 	{
 		return likenum;
@@ -146,6 +151,7 @@ public:
 	{
 		return id;
 	}
+
 	int gettoReplyId()
 	{
 		return toReplyId;
@@ -383,6 +389,7 @@ void post(string &loggedInUser)
 	tweets.push_back(Tweet(loggedInUser, content, id, isReply));
 	cout << "Your tweet posted successfully!" << endl;
 }
+
 void DeleteTweet(Tweet &tweet)
 {
 	int i = 0;
@@ -399,6 +406,7 @@ void DeleteTweet(Tweet &tweet)
 	}
 	tweets.erase(tweets.begin() + i);
 }
+
 void DoReply(string LoggedInUser, Tweet &tweet)
 {
 	cout << "Write your Reply" << endl;
@@ -409,6 +417,7 @@ void DoReply(string LoggedInUser, Tweet &tweet)
 	int isReply = 1;
 	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid()));
 }
+
 void TweetMenu(string LoggedInUser, Tweet &tweet);
 
 void showReply(Tweet &tweet)
@@ -430,6 +439,7 @@ void showReply(Tweet &tweet)
 
 	Twits.print();
 }
+
 void TweetMenu(string LoggedInUser, Tweet &tweet)
 {
 
@@ -448,6 +458,7 @@ void TweetMenu(string LoggedInUser, Tweet &tweet)
 	}
 	page.print();
 }
+
 void twitPage(string &loggedInUser)
 {
 	if (tweets.empty())
@@ -463,6 +474,70 @@ void twitPage(string &loggedInUser)
 					   { TweetMenu(loggedInUser, tweet); });
 	}
 	Twits.print();
+}
+
+void followUser(string &loggedInUser, const string &profileUser);
+
+void displayProfile(string &loggedInUser, const string &profileUser)
+{
+	bool isFollowing = false;
+
+	for (auto &account : db)
+	{
+		if (account.getUsername() == profileUser)
+		{
+			cout << "Name: " << account.getName() << " " << account.getFamilyName() << endl;
+			cout << "Username: " << account.getUsername() << endl;
+
+			cout << "Tweets:" << endl;
+			for (auto &tweet : tweets)
+			{
+				if (tweet.getTweetUsername() == profileUser)
+				{
+					cout << tweet.getTweetContent() << endl;
+				}
+			}
+
+			cout << "Followers:" << endl;
+			for (const auto &follower : account.follower)
+			{
+				cout << follower << endl;
+			}
+
+			cout << "Following:" << endl;
+			for (const auto &following : account.following)
+			{
+				cout << following << endl;
+			}
+
+			for (const auto &follower : account.follower)
+			{
+				if (follower == loggedInUser)
+				{
+					isFollowing = true;
+					break;
+				}
+			}
+
+			if (!isFollowing)
+			{
+				cout << "Follow this user? (y/n): ";
+				char choice;
+				cin >> choice;
+				if (choice == 'y')
+				{
+					followUser(loggedInUser, profileUser);
+					cout << "You are now following " << profileUser << endl;
+				}
+			}
+			else
+			{
+				cout << "You are already following this user." << endl;
+			}
+
+			break;
+		}
+	}
 }
 
 void profile(string &loggedInUser)
