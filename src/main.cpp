@@ -476,9 +476,9 @@ void twitPage(string &loggedInUser)
 	Twits.print();
 }
 
-void followUser(string &loggedInUser, const string &profileUser);
+void followUser(string &loggedInUser, string &profileUser);
 
-void displayProfile(string &loggedInUser, const string &profileUser)
+void displayProfile(string &loggedInUser, string &profileUser)
 {
 	bool isFollowing = false;
 
@@ -536,6 +536,21 @@ void displayProfile(string &loggedInUser, const string &profileUser)
 			}
 
 			break;
+		}
+	}
+}
+
+void followUser(string &loggedInUser, string &profileUser)
+{
+	for (auto &account : db)
+	{
+		if (account.getUsername() == loggedInUser)
+		{
+			account.addFollowing(profileUser);
+		}
+		if (account.getUsername() == profileUser)
+		{
+			account.addFollower(loggedInUser);
 		}
 	}
 }
