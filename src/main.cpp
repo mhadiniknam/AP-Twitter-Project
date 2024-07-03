@@ -563,20 +563,11 @@ void profile(string &loggedInUser)
 		return;
 	}
 
-	for (auto &account : db)
-	{
-		if (account.getUsername() == loggedInUser)
-		{
-			cout << "Name: " << account.getName() << endl;
-			cout << "Family Name: " << account.getFamilyName() << endl;
-			cout << "Email: " << account.getEmail() << endl;
-			cout << "Date of Birth: " << account.getDateOfBirth() << endl;
-			cout << "Gender: " << account.getGender() << endl;
-			return;
-		}
-	}
+	string profileUser;
+	cout << "Enter the username of the profile you want to view: ";
+	cin >> profileUser;
 
-	cout << "Error: User profile not found!" << endl;
+	displayProfile(loggedInUser, profileUser);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
