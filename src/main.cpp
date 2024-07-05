@@ -540,18 +540,18 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 		{
 			if (i == 4)
 			{
-				cout << "Your PassWord is Inproprate" << endl;
+				cout << "Sorry You choose an Inappropriate Password! The Standard Password is at least 8 characters and has at least one numeric character, one lowercase character, one uppercase character and one special character!" << endl;
 				return 0;
 			}
 
 			if (i == 5)
 			{
-				cout << "Your PassWord is Inproprate format !" << endl;
+				cout << "Sorry You choose an Inappropriate Password! The Standard Password is at least 8 characters and has at least one numeric character, one lowercase character, one uppercase character and one special character!" << endl;
 				return 0;
 			}
 			if (i == 3)
 			{
-				cout << "Your Username is not unique !" << endl;
+				cout << "Your Username is not unique!" << endl;
 				return 0;
 			}
 		}
@@ -599,18 +599,18 @@ void passwordRefresher(int &r)
 				{
 					if (!(s1.compare(y->getPassword())))
 					{
-						cout << "Sorry Your password is the same as your previous one !" << endl;
+						cout << "Sorry Your password is the same as your previous one!" << endl;
 					}
 					else
 					{
 						y->fieldSetter(4, s1);
-						cout << "Your password has changed successfully" << endl;
+						cout << "Your password has changed successfully." << endl;
 						x = 0;
 					}
 				}
 				else
 				{
-					cout << "Sorry You choose an Inproprate Password!" << endl;
+					cout << "Sorry You choose an Inappropriate Password! The Standard Password is at least 8 characters and has at least one numeric character, one lowercase character, one uppercase character and one special character!" << endl;
 				}
 			}
 		}
