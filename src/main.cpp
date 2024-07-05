@@ -386,16 +386,18 @@ void ReadTweet()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
-	bool hasAt = false, hasDot = false;
-	for (char c : email)
+	size_t atPos = email.find('@');
+	size_t dotPos = email.find('.', atPos + 1);
+
+	if (atPos != -1 && dotPos != -1 && atPos < dotPos)
 	{
-		if (c == '@')
-			hasAt = true;
-		if (hasAt && c == '.')
-			hasDot = true;
+		if (atPos > 0 && dotPos > atPos + 1 && dotPos < email.length() - 1)
+		{
+			return true;
+		}
 	}
 
-	return (hasAt && hasDot);
+	return false;
 }
 
 bool isValidPassword(string &password)
