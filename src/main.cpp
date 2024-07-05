@@ -548,7 +548,7 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 
 			if (i == 5)
 			{
-				cout << "Sorry You choose an Inappropriate Password! The Standard Password is at least 8 characters and has at least one numeric character, one lowercase character, one uppercase character and one special character!" << endl;
+				cout << "Your email address is invalid!" << endl;
 				return 0;
 			}
 			if (i == 3)
