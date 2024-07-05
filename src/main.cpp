@@ -72,16 +72,30 @@ public:
 
 	void fieldSetter(int i, string s)
 	{
-		switch (i)
-		{
-		case 6:
-			this->gender = s;
-			break;
-		case 7:
-			this->dateOfBirth = s;
-			break;
+			switch(i) {
+				case 1 :
+					this->name = s ; 
+					break ;
+				case 2 :
+					this->familyName = s ;
+					break ;
+				case 3 :
+						this->username = s ;
+					break ;
+				case 4 :
+						this->password = s; 
+					break ;
+				case 5 :
+						this->email = s ;
+					break ;
+				case 6:
+					this->dateOfBirth = s ; 
+					break;
+				case 7: 
+					this->gender = s ;
+					break ;
+			}
 		}
-	}
 
 	void addFollower(string &username)
 	{
@@ -236,13 +250,13 @@ void addDone(string &s, int refresh)
 }
 // Attention : If you change the size of any array you must change the function input of signin_field as well
 // component
-string comp[9];
+string static comp[9];
 
 // check whether a field just complete or not...
-int flag[8] = {0};
+int static flag[8] = {0};
 
 // The twitter fields
-string field[8];
+string static field[8];
 
 void sendTodb(string name, string familyName, string username, string password, string email)
 {
@@ -260,7 +274,7 @@ void sendTodb(string name, string familyName, string username, string password, 
 	db.push_back(x);
 }
 
-void signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
+int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 {
 	// -------------------------A Boosted & Compact Cin----------------------
 	int flager = 1;
@@ -309,24 +323,29 @@ void signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 			cout << "Done" << endl;
 			addDone(field[i], refresh);
 			flag[i] = 1;
+			return 1;
 		}
 		else
 		{
 			if (i == 4)
 			{
 				cout << "Your PassWord is Inproprate" << endl;
+			return 0 ;
 			}
 
 			if (i == 5)
 			{
 				cout << "Your PassWord is Inproprate format !" << endl;
+			return 0 ;
 			}
 			if (i == 3)
 			{
 				cout << "Your Username is not unique !" << endl;
+			return 0 ;
 			}
 		}
 	}
+	return 0 ;
 }
 
 void signUp()
@@ -358,7 +377,37 @@ void signUp()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-void setting(int &loginCode)
+
+void changeInfo(string &loggedInUser){
+	int j = 1 ; 
+	int k = 100 ;
+	string s ; 
+	Account * y = nullptr ;
+	int index1;
+	int w ;
+	for(auto &x : db){
+		if(!(x.getUsername().compare(loggedInUser))){
+			y = &x ;
+			break ; 
+		}
+	}
+	while(j){
+
+	CubbyMenu::Menu change;
+	change.add_header("What do you want to change ?");
+		for(int i = 1 ; i <= 7 ; i++ ) {
+			change.add_item(field[i], [&,i]()
+					{w = signInFields(i, field, flag, comp) ;cin.ignore(); index1=i ;});
+		}
+		change.add_item("Back to Settings",[&j](){j = 0;});
+		change.print() ;
+		if(w){
+		y->fieldSetter(index1 , comp[index1] ); 
+		}
+	}
+
+}
+void setting(int &loginCode,string &loggedInUser)
 {
 	int i = 1;
 	while (i)
@@ -366,6 +415,8 @@ void setting(int &loginCode)
 		CubbyMenu::Menu page;
 		page.add_item("Click for Logout", [&i, &loginCode]()
 					  { i = 0, loginCode = 0; });
+		page.add_item("Change The Personal Information", [&loggedInUser]()
+				{changeInfo(loggedInUser);});
 		page.add_item("Return Back To menu", [&i]
 					  { i = 0; });
 		page.print();
@@ -594,8 +645,8 @@ void twitterLogo()
 		page.add_item("The twitte page", [&loggedInUser]()
 					  { twitPage(loggedInUser); });
 
-		page.add_item("Settings", [&loginCode]()
-					  { setting(loginCode); });
+		page.add_item("Settings", [&loginCode, &loggedInUser]()
+				{ setting(loginCode,loggedInUser); });
 
 		page.add_item("Post", [&loggedInUser]()
 					  { post(loggedInUser); });
@@ -619,6 +670,8 @@ int main()
 	field[5] = "Email";
 	field[6] = "Date Of Birth";
 	field[7] = "Gender";
+	
+	db.push_back(Account("root","root","root","Ab@123456","root@root.com"));
 
 	while (exitcode)
 	{
