@@ -2,12 +2,19 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdlib>
+#include <cstdio>
 
 using namespace std;
 
 vector<class Account> db;
 vector<class Tweet> tweets;
 int id = 1;
+const char * accountfile = "./Data/Accounts.txt" ;
+const char * tweetfile = "./Data/Tweets.txt"  ;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,8 +26,8 @@ class Account
 		string username;
 		string email;
 		string password;
-		string dateOfBirth;
-		string gender;
+		string dateOfBirth = "" ;
+		string gender = "" ;
 
 	public:
 		vector<string> follower;
@@ -127,13 +134,14 @@ class Tweet
 			this->isReply = isReply;
 		}
 
-		Tweet(string username, string content, int id, int isReply, int toReplyId)
+		Tweet(string username, string content, int id, int isReply, int toReplyId,int like)
 		{
 			this->username = username;
 			this->content = content;
 			this->id = id;
 			this->isReply = isReply;
 			this->toReplyId = toReplyId;
+			this->likenum = like ;
 		}
 
 		string getTweetUsername()
@@ -173,7 +181,167 @@ class Tweet
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void WriteAccounts(){
+		string s = ","; 
+	string buf;
+	ofstream file ;
+	file.open(accountfile); 
+	if(file.is_open()){
+		for(auto& x : db){
+			s = s + x.getName()	;
+			s = s + "," ;
+			s = s + x.getFamilyName()	;
+			s = s + "," ;
+			s = s + x.getUsername()	;
+			s = s + "," ;
+			s = s + x.getPassword()	;
+			s = s + "," ;
+			s = s + x.getEmail()	;
+			s = s + "," ;
+			s = s + x.getDateOfBirth()	;
+			s = s + "," ;
+			for(auto & y : x.follower){
+				s = s + y + " ";
+			}
+			s = s + "," ; 
+			for(auto & y : x.following ){
+				s = s + y + " " ; 
+			}
+			s = s + ",\n" ; 
+			if(file.is_open()){
+				file << s ; 
+			}
+			s = "," ;
+		}
+	}else{
+		cout << "There is a problem in writing the " << accountfile << endl ;
+	}
+	file.close() ;
+}
+void ReadAccount(){
+	string s ; 
+	ifstream file ; 
+	file.open(accountfile) ; 
+	if(file.is_open()){
+		string token ; 
 
+
+		// The tokenizer 
+		while(getline(file,s)){
+			vector<string> tokens;
+			stringstream ss(s);
+			while(getline(ss,token,',')){
+				tokens.push_back(token) ; 
+			}
+
+
+			int isValid = 1; 
+			for(int i =  1; i <= 5 ; i++){
+				if(tokens[i].empty()){
+					isValid = 0;
+					break ;
+				}
+			}	
+			if(isValid){
+				Account x(tokens[1],tokens[2],tokens[3],tokens[4],tokens[5]) ;
+				if(!(tokens[6].empty())){
+					x.fieldSetter(6,tokens[6]);
+				}
+				if(!(tokens[7].empty())){
+					x.fieldSetter(7,tokens[7]);
+				}
+				std::stringstream s2(tokens[8]);
+				// We also can use somethings like getline(s2,token,' ');  
+				while(getline(s2,token,' ')){
+					x.follower.push_back(token) ;
+				}	
+				std::stringstream s3(tokens[9]);
+				while(s3 >> token){
+					x.following.push_back(token) ;
+				}
+				db.push_back(x) ;
+			}else{
+				cout << "There is a problem in the format of the input file" << endl ; 
+			}
+		}
+	}else{
+		cout << "There is a problem in Reading the " << accountfile << endl ;
+	}
+	file.close() ; 
+	if(remove(accountfile) != 0 ){
+		cout << "There is some sort of problem with removing the account file " << endl;
+	}
+
+}
+void WriteTweet(){
+	string s = ","; 
+	string buf;
+	ofstream file ;
+	file.open(tweetfile); 
+	if(file.is_open()){
+		for(auto& x : tweets){
+			s = s + x.getTweetUsername()	;
+			s = s + "," ;
+			s = s + x.getTweetContent()	;
+			s = s + "," ;
+			s = s + to_string(x.getlike())	;
+			s = s + "," ;
+			s = s + to_string(x.getisReply())	;
+			s = s + "," ;
+			s = s + to_string(x.getid())	;
+			s = s + "," ;
+			s = s + to_string(x.gettoReplyId());
+			s = s + ",\n" ;
+			if(file.is_open()){
+				file << s ; 
+			}
+			s = "," ;
+		}
+	}else{
+		cout << "There is a problem in writing the " << tweetfile << endl ;
+	}
+	file.close() ;
+
+}
+void ReadTweet(){
+	string s ; 
+	ifstream file ; 
+	file.open(tweetfile) ; 
+	if(file.is_open()){
+		string token ; 
+
+
+		// The tokenizer 
+		while(getline(file,s)){
+			vector<string> tokens;
+			stringstream ss(s);
+			while(getline(ss,token,',')){
+				tokens.push_back(token) ; 
+			}
+
+			int isValid = 1; 
+			for(int i =  1; i <= 6 ; i++){
+				if(tokens[i].empty()){
+					isValid = 0;
+					break ;
+				}
+			}	
+			if(isValid){
+Tweet x(tokens[1], tokens[2], std::stoi(tokens[5]), std::stoi(tokens[4]), std::stoi(tokens[6]), std::stoi(tokens[3]));
+				tweets.push_back(x) ;
+			}else{
+				cout << "There is a problem in the format of the input file" << endl ; 
+			}
+		}
+	}else{
+		cout << "There is a problem in Reading the " << tweetfile << endl ;
+	}
+	file.close() ; 
+	if(remove(tweetfile) != 0 ){
+		cout << "There is some sort of problem with removing the account file " << endl;
+	}
+
+}
 bool isValidEmail(string &email)
 {
 	bool hasAt = false, hasDot = false;
@@ -519,7 +687,7 @@ void DoReply(string LoggedInUser, Tweet &tweet)
 	cin.ignore();
 	id++;
 	int isReply = 1;
-	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid()));
+	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid() ,0));
 }
 
 void TweetMenu(string LoggedInUser, Tweet &tweet);
@@ -715,6 +883,8 @@ void twitterLogo()
 
 int main()
 {
+	ReadAccount();	
+	ReadTweet();	
 	int exitcode = 1;
 	field[1] = "Name";
 	field[2] = "FamilyName";
@@ -749,4 +919,6 @@ int main()
 		   */
 		menu.print();
 	}
+	WriteAccounts();
+	WriteTweet();
 }
