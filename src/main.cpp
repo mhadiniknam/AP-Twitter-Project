@@ -13,335 +13,377 @@ using namespace std;
 vector<class Account> db;
 vector<class Tweet> tweets;
 int id = 1;
-const char * accountfile = "./Data/Accounts.txt" ;
-const char * tweetfile = "./Data/Tweets.txt"  ;
+const char *accountfile = "./Data/Accounts.txt";
+const char *tweetfile = "./Data/Tweets.txt";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Account
 {
-	private:
-		string name;
-		string familyName;
-		string username;
-		string email;
-		string password;
-		string dateOfBirth = "" ;
-		string gender = "" ;
+private:
+	string name;
+	string familyName;
+	string username;
+	string email;
+	string password;
+	string dateOfBirth = "";
+	string gender = "";
 
-	public:
-		vector<string> follower;
-		vector<string> following;
+public:
+	vector<string> follower;
+	vector<string> following;
 
-		Account(string name, string familyName, string username, string password, string email)
+	Account(string name, string familyName, string username, string password, string email)
+	{
+		this->name = name;
+		this->familyName = familyName;
+		this->username = username;
+		this->email = email;
+		this->password = password;
+	}
+
+	string getUsername()
+	{
+		return username;
+	}
+
+	string getEmail()
+	{
+		return email;
+	}
+
+	string getPassword()
+	{
+		return password;
+	}
+
+	string getName()
+	{
+		return name;
+	}
+
+	string getFamilyName()
+	{
+		return familyName;
+	}
+
+	string getDateOfBirth()
+	{
+		return dateOfBirth;
+	}
+
+	string getGender()
+	{
+		return gender;
+	}
+
+	void fieldSetter(int i, string s)
+	{
+		switch (i)
 		{
-			this->name = name;
-			this->familyName = familyName;
-			this->username = username;
-			this->email = email;
-			this->password = password;
+		case 1:
+			this->name = s;
+			break;
+		case 2:
+			this->familyName = s;
+			break;
+		case 3:
+			this->username = s;
+			break;
+		case 4:
+			this->password = s;
+			break;
+		case 5:
+			this->email = s;
+			break;
+		case 6:
+			this->dateOfBirth = s;
+			break;
+		case 7:
+			this->gender = s;
+			break;
 		}
+	}
 
-		string getUsername()
-		{
-			return username;
-		}
+	void addFollower(string &username)
+	{
+		follower.push_back(username);
+	}
 
-		string getEmail()
-		{
-			return email;
-		}
-
-		string getPassword()
-		{
-			return password;
-		}
-
-		string getName()
-		{
-			return name;
-		}
-
-		string getFamilyName()
-		{
-			return familyName;
-		}
-
-		string getDateOfBirth()
-		{
-			return dateOfBirth;
-		}
-
-		string getGender()
-		{
-			return gender;
-		}
-
-		void fieldSetter(int i, string s)
-		{
-			switch(i) {
-				case 1 :
-					this->name = s ; 
-					break ;
-				case 2 :
-					this->familyName = s ;
-					break ;
-				case 3 :
-					this->username = s ;
-					break ;
-				case 4 :
-					this->password = s; 
-					break ;
-				case 5 :
-					this->email = s ;
-					break ;
-				case 6:
-					this->dateOfBirth = s ; 
-					break;
-				case 7: 
-					this->gender = s ;
-					break ;
-			}
-		}
-
-		void addFollower(string &username)
-		{
-			follower.push_back(username);
-		}
-
-		void addFollowing(string &username)
-		{
-			following.push_back(username);
-		}
+	void addFollowing(string &username)
+	{
+		following.push_back(username);
+	}
 };
 
 class Tweet
 {
-	private:
-		string username;
-		string content;
-		int likenum = 0;
-		int isReply;
-		int id;
-		int toReplyId;
+private:
+	string username;
+	string content;
+	int likenum = 0;
+	int isReply;
+	int id;
+	int toReplyId;
 
-	public:
-		Tweet(string username, string content, int id, int isReply)
-		{
-			this->username = username;
-			this->content = content;
-			this->id = id;
-			this->isReply = isReply;
-		}
+public:
+	Tweet(string username, string content, int id, int isReply)
+	{
+		this->username = username;
+		this->content = content;
+		this->id = id;
+		this->isReply = isReply;
+	}
 
-		Tweet(string username, string content, int id, int isReply, int toReplyId,int like)
-		{
-			this->username = username;
-			this->content = content;
-			this->id = id;
-			this->isReply = isReply;
-			this->toReplyId = toReplyId;
-			this->likenum = like ;
-		}
+	Tweet(string username, string content, int id, int isReply, int toReplyId, int like)
+	{
+		this->username = username;
+		this->content = content;
+		this->id = id;
+		this->isReply = isReply;
+		this->toReplyId = toReplyId;
+		this->likenum = like;
+	}
 
-		string getTweetUsername()
-		{
-			return username;
-		}
+	string getTweetUsername()
+	{
+		return username;
+	}
 
-		string getTweetContent()
-		{
-			return content;
-		}
+	string getTweetContent()
+	{
+		return content;
+	}
 
-		void like()
-		{
-			likenum++;
-		}
+	void like()
+	{
+		likenum++;
+	}
 
-		int getisReply()
-		{
-			return isReply;
-		}
+	int getisReply()
+	{
+		return isReply;
+	}
 
-		int getlike()
-		{
-			return likenum;
-		}
+	int getlike()
+	{
+		return likenum;
+	}
 
-		int getid()
-		{
-			return id;
-		}
+	int getid()
+	{
+		return id;
+	}
 
-		int gettoReplyId()
-		{
-			return toReplyId;
-		}
+	int gettoReplyId()
+	{
+		return toReplyId;
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void WriteAccounts(){
-		string s = ","; 
+void WriteAccounts()
+{
+	string s = ",";
 	string buf;
-	ofstream file ;
-	file.open(accountfile); 
-	if(file.is_open()){
-		for(auto& x : db){
-			s = s + x.getName()	;
-			s = s + "," ;
-			s = s + x.getFamilyName()	;
-			s = s + "," ;
-			s = s + x.getUsername()	;
-			s = s + "," ;
-			s = s + x.getPassword()	;
-			s = s + "," ;
-			s = s + x.getEmail()	;
-			s = s + "," ;
-			s = s + x.getDateOfBirth()	;
-			s = s + "," ;
-			for(auto & y : x.follower){
+	ofstream file;
+	file.open(accountfile);
+	if (file.is_open())
+	{
+		for (auto &x : db)
+		{
+			s = s + x.getName();
+			s = s + ",";
+			s = s + x.getFamilyName();
+			s = s + ",";
+			s = s + x.getUsername();
+			s = s + ",";
+			s = s + x.getPassword();
+			s = s + ",";
+			s = s + x.getEmail();
+			s = s + ",";
+			s = s + x.getDateOfBirth();
+			s = s + ",";
+			for (auto &y : x.follower)
+			{
 				s = s + y + " ";
 			}
-			s = s + "," ; 
-			for(auto & y : x.following ){
-				s = s + y + " " ; 
+			s = s + ",";
+			for (auto &y : x.following)
+			{
+				s = s + y + " ";
 			}
-			s = s + ",\n" ; 
-			if(file.is_open()){
-				file << s ; 
+			s = s + ",\n";
+			if (file.is_open())
+			{
+				file << s;
 			}
-			s = "," ;
+			s = ",";
 		}
-	}else{
-		cout << "There is a problem in writing the " << accountfile << endl ;
 	}
-	file.close() ;
+	else
+	{
+		cout << "There is a problem in writing the " << accountfile << endl;
+	}
+	file.close();
 }
-void ReadAccount(){
-	string s ; 
-	ifstream file ; 
-	file.open(accountfile) ; 
-	if(file.is_open()){
-		string token ; 
 
+void ReadAccount()
+{
+	string s;
+	ifstream file;
+	file.open(accountfile);
+	if (file.is_open())
+	{
+		string token;
 
-		// The tokenizer 
-		while(getline(file,s)){
+		// The tokenizer
+		while (getline(file, s))
+		{
 			vector<string> tokens;
 			stringstream ss(s);
-			while(getline(ss,token,',')){
-				tokens.push_back(token) ; 
+			while (getline(ss, token, ','))
+			{
+				tokens.push_back(token);
 			}
 
-
-			int isValid = 1; 
-			for(int i =  1; i <= 5 ; i++){
-				if(tokens[i].empty()){
+			int isValid = 1;
+			for (int i = 1; i <= 5; i++)
+			{
+				if (tokens[i].empty())
+				{
 					isValid = 0;
-					break ;
+					break;
 				}
-			}	
-			if(isValid){
-				Account x(tokens[1],tokens[2],tokens[3],tokens[4],tokens[5]) ;
-				if(!(tokens[6].empty())){
-					x.fieldSetter(6,tokens[6]);
+			}
+			if (isValid)
+			{
+				Account x(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+				if (!(tokens[6].empty()))
+				{
+					x.fieldSetter(6, tokens[6]);
 				}
-				if(!(tokens[7].empty())){
-					x.fieldSetter(7,tokens[7]);
+				if (!(tokens[7].empty()))
+				{
+					x.fieldSetter(7, tokens[7]);
 				}
 				std::stringstream s2(tokens[8]);
-				// We also can use somethings like getline(s2,token,' ');  
-				while(getline(s2,token,' ')){
-					x.follower.push_back(token) ;
-				}	
-				std::stringstream s3(tokens[9]);
-				while(s3 >> token){
-					x.following.push_back(token) ;
+				// We also can use somethings like getline(s2,token,' ');
+				while (getline(s2, token, ' '))
+				{
+					x.follower.push_back(token);
 				}
-				db.push_back(x) ;
-			}else{
-				cout << "There is a problem in the format of the input file" << endl ; 
+				std::stringstream s3(tokens[9]);
+				while (s3 >> token)
+				{
+					x.following.push_back(token);
+				}
+				db.push_back(x);
+			}
+			else
+			{
+				cout << "There is a problem in the format of the input file" << endl;
 			}
 		}
-	}else{
-		cout << "There is a problem in Reading the " << accountfile << endl ;
 	}
-	file.close() ; 
-	if(remove(accountfile) != 0 ){
+	else
+	{
+		cout << "There is a problem in Reading the " << accountfile << endl;
+	}
+	file.close();
+	if (remove(accountfile) != 0)
+	{
 		cout << "There is some sort of problem with removing the account file " << endl;
 	}
-
 }
-void WriteTweet(){
-	string s = ","; 
+
+void WriteTweet()
+{
+	string s = ",";
 	string buf;
-	ofstream file ;
-	file.open(tweetfile); 
-	if(file.is_open()){
-		for(auto& x : tweets){
-			s = s + x.getTweetUsername()	;
-			s = s + "," ;
-			s = s + x.getTweetContent()	;
-			s = s + "," ;
-			s = s + to_string(x.getlike())	;
-			s = s + "," ;
-			s = s + to_string(x.getisReply())	;
-			s = s + "," ;
-			s = s + to_string(x.getid())	;
-			s = s + "," ;
+	ofstream file;
+	file.open(tweetfile);
+	if (file.is_open())
+	{
+		for (auto &x : tweets)
+		{
+			s = s + x.getTweetUsername();
+			s = s + ",";
+			s = s + x.getTweetContent();
+			s = s + ",";
+			s = s + to_string(x.getlike());
+			s = s + ",";
+			s = s + to_string(x.getisReply());
+			s = s + ",";
+			s = s + to_string(x.getid());
+			s = s + ",";
 			s = s + to_string(x.gettoReplyId());
-			s = s + ",\n" ;
-			if(file.is_open()){
-				file << s ; 
+			s = s + ",\n";
+			if (file.is_open())
+			{
+				file << s;
 			}
-			s = "," ;
+			s = ",";
 		}
-	}else{
-		cout << "There is a problem in writing the " << tweetfile << endl ;
 	}
-	file.close() ;
-
+	else
+	{
+		cout << "There is a problem in writing the " << tweetfile << endl;
+	}
+	file.close();
 }
-void ReadTweet(){
-	string s ; 
-	ifstream file ; 
-	file.open(tweetfile) ; 
-	if(file.is_open()){
-		string token ; 
 
+void ReadTweet()
+{
+	string s;
+	ifstream file;
+	file.open(tweetfile);
+	if (file.is_open())
+	{
+		string token;
 
-		// The tokenizer 
-		while(getline(file,s)){
+		// The tokenizer
+		while (getline(file, s))
+		{
 			vector<string> tokens;
 			stringstream ss(s);
-			while(getline(ss,token,',')){
-				tokens.push_back(token) ; 
+			while (getline(ss, token, ','))
+			{
+				tokens.push_back(token);
 			}
 
-			int isValid = 1; 
-			for(int i =  1; i <= 6 ; i++){
-				if(tokens[i].empty()){
+			int isValid = 1;
+			for (int i = 1; i <= 6; i++)
+			{
+				if (tokens[i].empty())
+				{
 					isValid = 0;
-					break ;
+					break;
 				}
-			}	
-			if(isValid){
-Tweet x(tokens[1], tokens[2], std::stoi(tokens[5]), std::stoi(tokens[4]), std::stoi(tokens[6]), std::stoi(tokens[3]));
-				tweets.push_back(x) ;
-			}else{
-				cout << "There is a problem in the format of the input file" << endl ; 
+			}
+			if (isValid)
+			{
+				Tweet x(tokens[1], tokens[2], std::stoi(tokens[5]), std::stoi(tokens[4]), std::stoi(tokens[6]), std::stoi(tokens[3]));
+				tweets.push_back(x);
+			}
+			else
+			{
+				cout << "There is a problem in the format of the input file" << endl;
 			}
 		}
-	}else{
-		cout << "There is a problem in Reading the " << tweetfile << endl ;
 	}
-	file.close() ; 
-	if(remove(tweetfile) != 0 ){
+	else
+	{
+		cout << "There is a problem in Reading the " << tweetfile << endl;
+	}
+	file.close();
+	if (remove(tweetfile) != 0)
+	{
 		cout << "There is some sort of problem with removing the account file " << endl;
 	}
-
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
 	bool hasAt = false, hasDot = false;
@@ -395,7 +437,7 @@ void login(string &loggedInUser, int &flaglogin)
 	{
 		if ((account.getUsername() == userInput || account.getEmail() == userInput) && (account.getPassword() == password))
 		{
-			loggedInUser = account.getUsername(); // Set the loggedInUser to the found username
+			loggedInUser = account.getUsername();
 			cout << "\nWelcome back, " << account.getName() << "!\n";
 			flaglogin = 1;
 			break;
@@ -454,9 +496,9 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 		CubbyMenu::Menu Y;
 		Y.add_header("You had done this field do you want to edit it ?");
 		Y.add_item("Yes", [&refresh]()
-				{ refresh = 0; });
+				   { refresh = 0; });
 		Y.add_item("No", [&flager]()
-				{ flager = 0; });
+				   { flager = 0; });
 		Y.print();
 	}
 	if (flager)
@@ -499,30 +541,32 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 			if (i == 4)
 			{
 				cout << "Your PassWord is Inproprate" << endl;
-				return 0 ;
+				return 0;
 			}
 
 			if (i == 5)
 			{
 				cout << "Your PassWord is Inproprate format !" << endl;
-				return 0 ;
+				return 0;
 			}
 			if (i == 3)
 			{
 				cout << "Your Username is not unique !" << endl;
-				return 0 ;
+				return 0;
 			}
 		}
 	}
-	return 0 ;
+	return 0;
 }
-void passwordRefresher(int & r){
+void passwordRefresher(int &r)
+{
 
 	string userInput;
 	string password;
-	int flagx =0 ;
-	Account * y ; 
-	while(r){
+	int flagx = 0;
+	Account *y;
+	while (r)
+	{
 
 		cout << "Enter your username or email: ";
 		cin >> userInput;
@@ -534,62 +578,73 @@ void passwordRefresher(int & r){
 		{
 			if ((account.getUsername() == userInput || account.getEmail() == userInput) && (account.getPassword() == password))
 			{
-				y = &account ;
-				flagx = 1; 
-				r = 0 ;
+				y = &account;
+				flagx = 1;
+				r = 0;
 				break;
 			}
 		}
-		if(flagx ){
-			int x = 1 ; 
-			string s1 ;
-			bool a = false ;
-			while(x){
-				cout << "Enter Your New Password" <<endl ;
-				cin >> s1 ; 
-				cin.ignore() ;
-				a = isValidPassword(s1) ; 
-				if(a) {
-					if(!(s1.compare(y->getPassword()))){
-						cout << "Sorry Your password is the same as your previous one !" << endl ; 
-					}else{
-						y->fieldSetter(4,s1);
-						cout << "Your password has changed successfully" << endl;
-						x = 0 ;
+		if (flagx)
+		{
+			int x = 1;
+			string s1;
+			bool a = false;
+			while (x)
+			{
+				cout << "Enter Your New Password" << endl;
+				cin >> s1;
+				cin.ignore();
+				a = isValidPassword(s1);
+				if (a)
+				{
+					if (!(s1.compare(y->getPassword())))
+					{
+						cout << "Sorry Your password is the same as your previous one !" << endl;
 					}
-				}else{
+					else
+					{
+						y->fieldSetter(4, s1);
+						cout << "Your password has changed successfully" << endl;
+						x = 0;
+					}
+				}
+				else
+				{
 					cout << "Sorry You choose an Inproprate Password!" << endl;
 				}
 			}
-		}else{
-			cout << "Wrong Username or Password , Try again ... " << endl ;
+		}
+		else
+		{
+			cout << "Wrong Username or Password , Try again ... " << endl;
 		}
 	}
 }
 
 void signUp()
 {
-	int r = 1 ;
+	int r = 1;
 
 	while (!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5])
 	{
 		CubbyMenu::Menu sign;
 		sign.add_header("----------SignUp Menu----------");
 		sign.add_item(field[1], [&]()
-				{ signInFields(1, field, flag, comp); });
+					  { signInFields(1, field, flag, comp); });
 		sign.add_item(field[2], [&]()
-				{ signInFields(2, field, flag, comp); });
+					  { signInFields(2, field, flag, comp); });
 		sign.add_item(field[3], [&]()
-				{ signInFields(3, field, flag, comp); });
+					  { signInFields(3, field, flag, comp); });
 		sign.add_item(field[4], [&]()
-				{ signInFields(4, field, flag, comp); });
+					  { signInFields(4, field, flag, comp); });
 		sign.add_item(field[5], [&]()
-				{ signInFields(5, field, flag, comp); });
+					  { signInFields(5, field, flag, comp); });
 		sign.add_item(field[6], [&]()
-				{ signInFields(6, field, flag, comp); });
+					  { signInFields(6, field, flag, comp); });
 		sign.add_item(field[7], [&]()
-				{ signInFields(7, field, flag, comp); });
-		sign.add_item("Do you forget your password ?" ,[&r](){passwordRefresher(r); });
+					  { signInFields(7, field, flag, comp); });
+		// sign.add_item("Do you forget your password ?", [&r]()
+		// 			  { passwordRefresher(r); });
 
 		sign.print();
 	}
@@ -599,47 +654,53 @@ void signUp()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void changeInfo(string &loggedInUser){
-	int j = 1 ; 
-	int k = 100 ;
-	string s ; 
-	Account * y = nullptr ;
+void changeInfo(string &loggedInUser)
+{
+	int j = 1;
+	int k = 100;
+	string s;
+	Account *y = nullptr;
 	int index1;
-	int w ;
-	for(auto &x : db){
-		if(!(x.getUsername().compare(loggedInUser))){
-			y = &x ;
-			break ; 
+	int w;
+	for (auto &x : db)
+	{
+		if (!(x.getUsername().compare(loggedInUser)))
+		{
+			y = &x;
+			break;
 		}
 	}
-	while(j){
+	while (j)
+	{
 
 		CubbyMenu::Menu change;
 		change.add_header("What do you want to change ?");
-		for(int i = 1 ; i <= 7 ; i++ ) {
-			change.add_item(field[i], [&,i]()
-					{w = signInFields(i, field, flag, comp) ;cin.ignore(); index1=i ;});
+		for (int i = 1; i <= 7; i++)
+		{
+			change.add_item(field[i], [&, i]()
+							{w = signInFields(i, field, flag, comp) ;cin.ignore(); index1=i ; });
 		}
-		change.add_item("Back to Settings",[&j](){j = 0;});
-		change.print() ;
-		if(w){
-			y->fieldSetter(index1 , comp[index1] ); 
+		change.add_item("Back to Settings", [&j]()
+						{ j = 0; });
+		change.print();
+		if (w)
+		{
+			y->fieldSetter(index1, comp[index1]);
 		}
 	}
-
 }
-void setting(int &loginCode,string &loggedInUser)
+void setting(int &loginCode, string &loggedInUser)
 {
 	int i = 1;
 	while (i)
 	{
 		CubbyMenu::Menu page;
 		page.add_item("Click for Logout", [&i, &loginCode]()
-				{ i = 0, loginCode = 0; });
+					  { i = 0, loginCode = 0; });
 		page.add_item("Change The Personal Information", [&loggedInUser]()
-				{changeInfo(loggedInUser);});
+					  { changeInfo(loggedInUser); });
 		page.add_item("Return Back To menu", [&i]
-				{ i = 0; });
+					  { i = 0; });
 		page.print();
 	}
 }
@@ -687,7 +748,7 @@ void DoReply(string LoggedInUser, Tweet &tweet)
 	cin.ignore();
 	id++;
 	int isReply = 1;
-	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid() ,0));
+	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid(), 0));
 }
 
 void TweetMenu(string LoggedInUser, Tweet &tweet);
@@ -704,7 +765,7 @@ void showReply(Tweet &tweet)
 			if (x.getisReply())
 			{
 				Twits.add_item(x.getTweetUsername() + ":" + x.getTweetContent(), [username = x.getTweetUsername(), &x]()
-						{ TweetMenu(username, x); });
+							   { TweetMenu(username, x); });
 			}
 		}
 	}
@@ -718,15 +779,15 @@ void TweetMenu(string LoggedInUser, Tweet &tweet)
 	CubbyMenu::Menu page;
 	page.add_header("What you want to do with this tweet ?");
 	page.add_item("Do Reply", [&LoggedInUser, &tweet]()
-			{ DoReply(LoggedInUser, tweet); });
+				  { DoReply(LoggedInUser, tweet); });
 	page.add_item("Show Replies", [&tweet]()
-			{ showReply(tweet); });
+				  { showReply(tweet); });
 	page.add_item("Like the tweet", [&tweet]()
-			{ tweet.like(); });
+				  { tweet.like(); });
 	if (!(tweet.getTweetUsername().compare(LoggedInUser)))
 	{
 		page.add_item("Delete the tweet", [&tweet]()
-				{ DeleteTweet(tweet); });
+					  { DeleteTweet(tweet); });
 	}
 	page.print();
 }
@@ -743,7 +804,7 @@ void twitPage(string &loggedInUser)
 	for (auto &tweet : tweets)
 	{
 		Twits.add_item(tweet.getTweetUsername() + ":" + tweet.getTweetContent(), [&loggedInUser, &tweet]()
-				{ TweetMenu(loggedInUser, tweet); });
+					   { TweetMenu(loggedInUser, tweet); });
 	}
 	Twits.print();
 }
@@ -864,16 +925,16 @@ void twitterLogo()
 		cout << "-------------------------------------" << endl;
 
 		page.add_item("The twitte page", [&loggedInUser]()
-				{ twitPage(loggedInUser); });
+					  { twitPage(loggedInUser); });
 
 		page.add_item("Settings", [&loginCode, &loggedInUser]()
-				{ setting(loginCode,loggedInUser); });
+					  { setting(loginCode, loggedInUser); });
 
 		page.add_item("Post", [&loggedInUser]()
-				{ post(loggedInUser); });
+					  { post(loggedInUser); });
 
 		page.add_item("Profile", [&loggedInUser]()
-				{ profile(loggedInUser); });
+					  { profile(loggedInUser); });
 
 		page.print();
 	}
@@ -883,8 +944,8 @@ void twitterLogo()
 
 int main()
 {
-	ReadAccount();	
-	ReadTweet();	
+	ReadAccount();
+	ReadTweet();
 	int exitcode = 1;
 	field[1] = "Name";
 	field[2] = "FamilyName";
@@ -894,7 +955,7 @@ int main()
 	field[6] = "Date Of Birth";
 	field[7] = "Gender";
 
-	db.push_back(Account("root","root","root","Ab@123456","root@root.com"));
+	db.push_back(Account("root", "root", "root", "Ab@123456", "root@root.com"));
 
 	while (exitcode)
 	{
@@ -906,7 +967,7 @@ int main()
 		menu.add_item("SignUp", &signUp);
 
 		menu.add_item("Exit", [&exitcode]()
-				{ exitcode = 0; });
+					  { exitcode = 0; });
 
 		/*
 		   menu.add_item("Post", [&loggedInUser]()
@@ -919,6 +980,7 @@ int main()
 		   */
 		menu.print();
 	}
+
 	WriteAccounts();
 	WriteTweet();
 }
