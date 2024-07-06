@@ -290,6 +290,7 @@ void ReadAccount()
 	else
 	{
 		cout << "There is a problem in Reading the " << accountfile << endl;
+		cout << "Go to the " << accountfile << "and add the Accounts.txt " << endl;
 	}
 	file.close();
 	if (remove(accountfile) != 0)
@@ -370,6 +371,7 @@ void ReadTweet()
 			else
 			{
 				cout << "There is a problem in the format of the input file" << endl;
+				cout << "Go to the " << tweetfile << "and add the Accounts.txt " << endl;
 			}
 		}
 	}
@@ -441,13 +443,16 @@ void searchTweet()
 
 void searchPage()
 {
+	int i = 1 ;
+	while(i) {
 	CubbyMenu::Menu searchMenu;
 	searchMenu.add_header("Search Page");
 	searchMenu.add_item("Search Accounts", searchAccount);
 	searchMenu.add_item("Search Tweets", searchTweet);
-	searchMenu.add_item("Back to Main Menu", []() {});
+	searchMenu.add_item("Back to Main Menu", [&i]() {i=0;});
 
 	searchMenu.print();
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
@@ -1045,6 +1050,7 @@ void twitterLogo()
 		page.add_item("Profile", [&loggedInUser]()
 					  { profile(loggedInUser); });
 
+		page.add_item("Search", searchPage);
 		page.print();
 	}
 }
@@ -1062,10 +1068,10 @@ int main()
 	field[5] = "Email";
 	field[6] = "Date Of Birth";
 	field[7] = "Gender";
-
+	int j = 1 ;
 	db.push_back(Account("root", "root", "root", "Ab@123456", "root@root.com"));
 
-	while (true)
+	while (j)
 	{
 		CubbyMenu::Menu menu;
 		menu.add_header("---------AP-Twitter-Project---------");
@@ -1075,23 +1081,10 @@ int main()
             string loggedInUser;
             int flaglogin = 0;
             login(loggedInUser, flaglogin); });
-		menu.add_item("Sign Up", signUp);
-		menu.add_item("Settings", []()
-					  {
-            int loginCode = 1;
-            string loggedInUser;
-            setting(loginCode, loggedInUser); });
-		menu.add_item("Post a Tweet", []()
-					  {
-            string loggedInUser;
-            post(loggedInUser); });
-		menu.add_item("View Tweets", []()
-					  {
-            string loggedInUser;
-            twitPage(loggedInUser); });
-		menu.add_item("Search", searchPage);
-		menu.add_item("Exit", []()
-					  { exit(0); });
+		menu.add_item("Sign Up", &signUp);
+
+		menu.add_item("Exit", [&j]()
+					  {j=0; });
 
 		menu.print();
 	}
