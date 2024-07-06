@@ -411,6 +411,31 @@ void searchAccount()
 	}
 }
 
+void searchTweet()
+{
+	string input;
+	cout << "Enter tweet ID or tweet text to search: ";
+	cin.ignore();
+	getline(cin, input);
+
+	bool found = false;
+	for (auto &tweet : tweets)
+	{
+		if (to_string(tweet.getid()) == input || tweet.getTweetContent().find(input) != string::npos)
+		{
+			string loggedInUser;
+			TweetMenu(loggedInUser, tweet);
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		cout << "No tweet found with the given input." << endl;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
