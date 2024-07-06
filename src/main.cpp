@@ -385,6 +385,9 @@ void ReadTweet()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void displayProfile(string &loggedInUser, string &profileUser);
+void TweetMenu(string LoggedInUser, Tweet &tweet);
+
 void searchAccount()
 {
 	string input;
@@ -446,7 +449,6 @@ void searchPage()
 
 	searchMenu.print();
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
@@ -860,8 +862,6 @@ void DoReply(string LoggedInUser, Tweet &tweet)
 	tweets.push_back(Tweet(LoggedInUser, content, id, isReply, tweet.getid(), 0));
 }
 
-void TweetMenu(string LoggedInUser, Tweet &tweet);
-
 void showReply(Tweet &tweet)
 {
 
@@ -1055,7 +1055,6 @@ int main()
 {
 	ReadAccount();
 	ReadTweet();
-	int exitcode = 1;
 	field[1] = "Name";
 	field[2] = "FamilyName";
 	field[3] = "Username ";
@@ -1066,27 +1065,34 @@ int main()
 
 	db.push_back(Account("root", "root", "root", "Ab@123456", "root@root.com"));
 
-	while (exitcode)
+	while (true)
 	{
 		CubbyMenu::Menu menu;
 		menu.add_header("---------AP-Twitter-Project---------");
 		cout << "Do not use ctrl + C for terminating the program just use Exit provided here" << endl;
-		menu.add_item("Login", &twitterLogo);
+		menu.add_item("Login", []()
+					  {
+            string loggedInUser;
+            int flaglogin = 0;
+            login(loggedInUser, flaglogin); });
+		menu.add_item("Sign Up", signUp);
+		menu.add_item("Settings", []()
+					  {
+            int loginCode = 1;
+            string loggedInUser;
+            setting(loginCode, loggedInUser); });
+		menu.add_item("Post a Tweet", []()
+					  {
+            string loggedInUser;
+            post(loggedInUser); });
+		menu.add_item("View Tweets", []()
+					  {
+            string loggedInUser;
+            twitPage(loggedInUser); });
+		menu.add_item("Search", searchPage);
+		menu.add_item("Exit", []()
+					  { exit(0); });
 
-		menu.add_item("SignUp", &signUp);
-
-		menu.add_item("Exit", [&exitcode]()
-					  { exitcode = 0; });
-
-		/*
-		   menu.add_item("Post", [&loggedInUser]()
-		   { post(loggedInUser); });
-
-		   menu.add_item("View Tweets", twitPage);
-
-		   menu.add_item("Profile", [&loggedInUser]()
-		   { profile(loggedInUser); });
-		   */
 		menu.print();
 	}
 
