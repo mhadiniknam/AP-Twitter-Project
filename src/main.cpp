@@ -436,6 +436,17 @@ void searchTweet()
 	}
 }
 
+void searchPage()
+{
+	CubbyMenu::Menu searchMenu;
+	searchMenu.add_header("Search Page");
+	searchMenu.add_item("Search Accounts", searchAccount);
+	searchMenu.add_item("Search Tweets", searchTweet);
+	searchMenu.add_item("Back to Main Menu", []() {});
+
+	searchMenu.print();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
