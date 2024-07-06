@@ -387,6 +387,37 @@ void ReadTweet()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void twitPage(string &loggedInUser);
+void setting(int &loginCode, string &loggedInUser);
+void post(string &loggedInUser);
+void profile(string &loggedInUser);
+void searchPage();
+
+void mainPage(string &loggedInUser)
+{
+	int loginCode = 1;
+	while (loginCode)
+	{
+		CubbyMenu::Menu page;
+		page.add_item("The twitte page", [&loggedInUser]()
+					  { twitPage(loggedInUser); });
+
+		page.add_item("Settings", [&loginCode, &loggedInUser]()
+					  { setting(loginCode, loggedInUser); });
+
+		page.add_item("Post", [&loggedInUser]()
+					  { post(loggedInUser); });
+
+		page.add_item("Profile", [&loggedInUser]()
+					  { profile(loggedInUser); });
+
+		page.add_item("Search", searchPage);
+
+		page.print();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void displayProfile(string &loggedInUser, string &profileUser);
 void TweetMenu(string LoggedInUser, Tweet &tweet);
 
@@ -443,15 +474,17 @@ void searchTweet()
 
 void searchPage()
 {
-	int i = 1 ;
-	while(i) {
-	CubbyMenu::Menu searchMenu;
-	searchMenu.add_header("Search Page");
-	searchMenu.add_item("Search Accounts", searchAccount);
-	searchMenu.add_item("Search Tweets", searchTweet);
-	searchMenu.add_item("Back to Main Menu", [&i]() {i=0;});
+	int i = 1;
+	while (i)
+	{
+		CubbyMenu::Menu searchMenu;
+		searchMenu.add_header("Search Page");
+		searchMenu.add_item("Search Accounts", searchAccount);
+		searchMenu.add_item("Search Tweets", searchTweet);
+		searchMenu.add_item("Back to Main Menu", [&i]()
+							{ i = 0; });
 
-	searchMenu.print();
+		searchMenu.print();
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,6 +579,8 @@ void login(string &loggedInUser, int &flaglogin)
 
 			cout << "\nWelcome back, " << account.getName() << "!\n";
 			flaglogin = 1;
+			mainPage(loggedInUser);
+
 			break;
 		}
 	}
@@ -1068,7 +1103,7 @@ int main()
 	field[5] = "Email";
 	field[6] = "Date Of Birth";
 	field[7] = "Gender";
-	int j = 1 ;
+	int j = 1;
 	db.push_back(Account("root", "root", "root", "Ab@123456", "root@root.com"));
 
 	while (j)
@@ -1084,7 +1119,7 @@ int main()
 		menu.add_item("Sign Up", &signUp);
 
 		menu.add_item("Exit", [&j]()
-					  {j=0; });
+					  { j = 0; });
 
 		menu.print();
 	}
