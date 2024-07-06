@@ -385,6 +385,33 @@ void ReadTweet()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void searchAccount()
+{
+	string input;
+	cout << "Enter username, first name, or family name to search: ";
+	cin.ignore();
+	getline(cin, input);
+
+	bool found = false;
+	for (auto &account : db)
+	{
+		if (account.getUsername() == input || account.getName() == input || account.getFamilyName() == input)
+		{
+			string loggedInUser;
+			std::string username = account.getUsername();
+			displayProfile(loggedInUser, username);
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		cout << "No account found with the given input." << endl;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool isValidEmail(string &email)
 {
 	size_t atPos = email.find('@');
@@ -423,45 +450,57 @@ bool isValidPassword(string &password)
 
 	return (hasLower && hasUpper && hasDigit && hasSpecial);
 }
-static inline void ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }));
+
+// Left trim
+static inline void ltrim(std::string &s)
+{
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch)
+									{ return !std::isspace(ch); }));
 }
 
 // Right trim
-static inline void rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }).base(), s.end());
+static inline void rtrim(std::string &s)
+{
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch)
+						 { return !std::isspace(ch); })
+				.base(),
+			s.end());
 }
-	int attempt = 0 ;
+
+int attempt = 0;
 void login(string &loggedInUser, int &flaglogin)
 {
-
 	string userInput;
 	string password;
-	cout << "You have " << 3-attempt << " time for login" << endl;
-	// 1. using special character 
-	// 2. suing ctrl + c 
+	cout << "You have " << 3 - attempt << " time for login" << endl;
+	// 1. using special character
+	// 2. suing ctrl + c
 	// 3. using time
-	// 4. give them some attempt 
-	
+	// 4. give them some attempt
+
 	cout << "Enter your username or email: ";
 	cin >> userInput;
-	
+
 	cout << "Enter your password: ";
 	cin >> password;
 	ltrim(userInput);
 	rtrim(userInput);
 	ltrim(password);
-	rtrim(password) ;
+	rtrim(password);
 
 	for (auto &account : db)
 	{
 		if ((account.getUsername() == userInput || account.getEmail() == userInput) && (account.getPassword() == password))
 		{
-			loggedInUser = account.getUsername();
+			if (account.getUsername() == userInput)
+			{
+				loggedInUser = account.getUsername();
+			}
+			else
+			{
+				loggedInUser = account.getEmail();
+			}
+
 			cout << "\nWelcome back, " << account.getName() << "!\n";
 			flaglogin = 1;
 			break;
@@ -470,11 +509,12 @@ void login(string &loggedInUser, int &flaglogin)
 
 	if (!flaglogin)
 	{
-		attempt++ ;
+		attempt++;
 		cout << "\nLogin failed. Invalid username/email or password. Please try again.\n";
 	}
-	if(attempt == 3){
-		flaglogin = 1; 	
+	if (attempt == 3)
+	{
+		flaglogin = 1;
 	}
 }
 
@@ -500,7 +540,7 @@ string static field[8];
 void sendTodb(string name, string familyName, string username, string password, string email)
 {
 
-	cout << "Your SignUp has been complited" << endl;
+	cout << "Your SignUp has been completed" << endl;
 	auto x = Account(name, familyName, username, password, email);
 	if (flag[6])
 	{
@@ -529,6 +569,7 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 				   { flager = 0; });
 		Y.print();
 	}
+
 	if (flager)
 	{
 		cout << "Enter Your " << field[i] << endl;
@@ -652,8 +693,8 @@ void passwordRefresher(int &r)
 void signUp()
 {
 	int r = 1;
-	int z = 1 ;
-	while ((!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5])&& z)
+	int z = 1;
+	while ((!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5]) && z)
 	{
 		CubbyMenu::Menu sign;
 		sign.add_header("----------SignUp Menu----------");
@@ -672,13 +713,15 @@ void signUp()
 		sign.add_item(field[7], [&]()
 					  { signInFields(7, field, flag, comp); });
 		sign.add_item("Do you forget your password ?", [&r]()
-		 			  { passwordRefresher(r); });
-		sign.add_item("Back to Menu" , [&z](){z = 0;}) ;
+					  { passwordRefresher(r); });
+		sign.add_item("Back to Menu", [&z]()
+					  { z = 0; });
 
 		sign.print();
 	}
-	if(z == 1){
-	sendTodb(comp[1], comp[2], comp[3], comp[4], comp[5]);
+	if (z == 1)
+	{
+		sendTodb(comp[1], comp[2], comp[3], comp[4], comp[5]);
 	}
 }
 
