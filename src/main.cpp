@@ -618,7 +618,7 @@ int signInFields(int i, string (&field)[8], int (&flag)[8], string (&comp)[9])
 			// I want to check the existance of the username
 			for (Account x : db)
 			{
-				if (comp[i].compare(x.getUsername()))
+				if (!(comp[i].compare(x.getUsername())))
 				{
 					flag2 = 0;
 					break;
