@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstdio>
+#include <algorithm>
 
 using namespace std;
 
@@ -422,18 +423,39 @@ bool isValidPassword(string &password)
 
 	return (hasLower && hasUpper && hasDigit && hasSpecial);
 }
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
 
+// Right trim
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
+	int attempt = 0 ;
 void login(string &loggedInUser, int &flaglogin)
 {
 
 	string userInput;
 	string password;
-
+	cout << "You have " << 3-attempt << " time for login" << endl;
+	// 1. using special character 
+	// 2. suing ctrl + c 
+	// 3. using time
+	// 4. give them some attempt 
+	
 	cout << "Enter your username or email: ";
 	cin >> userInput;
-
+	
 	cout << "Enter your password: ";
 	cin >> password;
+	ltrim(userInput);
+	rtrim(userInput);
+	ltrim(password);
+	rtrim(password) ;
 
 	for (auto &account : db)
 	{
@@ -448,7 +470,11 @@ void login(string &loggedInUser, int &flaglogin)
 
 	if (!flaglogin)
 	{
+		attempt++ ;
 		cout << "\nLogin failed. Invalid username/email or password. Please try again.\n";
+	}
+	if(attempt == 3){
+		flaglogin = 1; 	
 	}
 }
 
@@ -626,8 +652,8 @@ void passwordRefresher(int &r)
 void signUp()
 {
 	int r = 1;
-
-	while (!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5])
+	int z = 1 ;
+	while ((!flag[1] || !flag[2] || !flag[3] || !flag[4] || !flag[5])&& z)
 	{
 		CubbyMenu::Menu sign;
 		sign.add_header("----------SignUp Menu----------");
@@ -645,13 +671,15 @@ void signUp()
 					  { signInFields(6, field, flag, comp); });
 		sign.add_item(field[7], [&]()
 					  { signInFields(7, field, flag, comp); });
-		// sign.add_item("Do you forget your password ?", [&r]()
-		// 			  { passwordRefresher(r); });
+		sign.add_item("Do you forget your password ?", [&r]()
+		 			  { passwordRefresher(r); });
+		sign.add_item("Back to Menu" , [&z](){z = 0;}) ;
 
 		sign.print();
 	}
-
+	if(z == 1){
 	sendTodb(comp[1], comp[2], comp[3], comp[4], comp[5]);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -963,7 +991,7 @@ int main()
 	{
 		CubbyMenu::Menu menu;
 		menu.add_header("---------AP-Twitter-Project---------");
-
+		cout << "Do not use ctrl + C for terminating the program just use Exit provided here" << endl;
 		menu.add_item("Login", &twitterLogo);
 
 		menu.add_item("SignUp", &signUp);
